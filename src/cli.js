@@ -100,7 +100,8 @@ module.exports = (argv, options) => {
         .then(state => {
             return state.error ? 1 : 0;
         })
-        .catch(() => {
+        .catch((e) => {
+            options.writeStderr(e);
             return 1;
         });
 };

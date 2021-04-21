@@ -2,8 +2,13 @@
 /* eslint-disable no-console */
 
 const cli = require('../src/cli');
+const fs = require('fs');
 
 const options = {
+    env: process.env,
+    mkdir: fs.promises.mkdir,
+    readFile: fs.promises.readFile,
+    writeFile: fs.promises.writeFile,
     writeStdout: console.log.bind(console),
     writeStderr: console.log.bind(console),
 };
