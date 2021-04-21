@@ -1,0 +1,49 @@
+{
+  "name": "@jimf/colortools",
+  "version": "0.1.0",
+  "description": "Command-line tool for working with colors",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jimf/colortools"
+  },
+  "scripts": {
+    "lint": "eslint bin src test",
+    "pretest": "npm run lint",
+    "test": "jest --coverage",
+    "tdd": "npm test -- --watch"
+  },
+  "bin": {
+    "color": "./bin/color.js"
+  },
+  "keywords": [
+    "color",
+    "cli"
+  ],
+  "author": "Jim Fitzpatrick",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jimf/colortools/issues"
+  },
+  "homepage": "https://github.com/jimf/colortools",
+  "dependencies": {},
+  "devDependencies": {
+    "eslint": "^7.24.0",
+    "jest": "^26.6.3"
+  },
+  "eslintConfig": {
+    "extends": "eslint:recommended",
+    "parserOptions": {
+      "ecmaVersion": 2021
+    },
+    "env": {
+      "node": true,
+      "es6": true,
+      "jest": true
+    }
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.js"
+    ]
+  }
+}
