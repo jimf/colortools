@@ -11,10 +11,12 @@ function parseArgv(state) {
 
     state.opts = parseOpts(argv, {
         boolean: [
+            'help',
             'version'
         ],
         alias: {
-            version: 'V'
+            help: 'h',
+            version: 'V',
         },
     });
     return state;
@@ -28,6 +30,26 @@ function handleVersionFlag(state) {
     return state;
 }
 
+function handleHelpFlag(state) {
+    if (
+        state.opts.help ||
+        state.argv.length === 0 ||
+        (state.argv.length === 1 && state.argv[0] === 'help')
+    ) {
+        state.options.writeStdout(`
+Usage: color [--version] [--help] <command> [<args>]
+
+where <command> is one of:
+    help, version
+
+See 'color help <command>' to read about a specific subcommand.
+`.trim());
+        state.done = true;
+    }
+
+    return state;
+}
+
 module.exports = (argv, options) => {
     const pipeTo = next => state =>
         state.done ? state : next(state);
@@ -35,6 +57,7 @@ module.exports = (argv, options) => {
     return Promise.resolve({ argv, done: false, options })
         .then(pipeTo(parseArgv))
         .then(pipeTo(handleVersionFlag))
+        .then(pipeTo(handleHelpFlag))
         .then(() => {
             return 0;
         })
