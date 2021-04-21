@@ -17,14 +17,14 @@ exports.cli = (argv, arrange) => {
     }
 
     return cli(['/path/to/node', '/path/to/colors.js', ...argv], options).then(
-        () => ({
-            exitCode: 0,
+        exitCode => ({
+            exitCode,
             stdout,
             stderr,
             options,
         }),
-        () => ({
-            exitCode: 1,
+        exitCode => ({
+            exitCode: exitCode || 1,
             stdout,
             stderr,
             options,

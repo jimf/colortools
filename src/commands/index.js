@@ -1,0 +1,1 @@
+exports.show = require('./show');
