@@ -7,15 +7,26 @@ const util = require('../util');
 const { parseColorArg } = require('./util');
 
 exports.help = `
-Usage: color show <color>
+Usage: color show <color> [<options>]
 
 Show information on a color.
+
+Available options:
+  --help, -h             This help
+  --format=<format>      Specify a different output format. Available formats:
+                         json
+  --json                 Shorthand for '--format=json'
+  -1                     (The numeric digit one) Force single-column output.
+                         Applies to the default format only.
 `.trim();
 
 exports.parseOptions = {
     boolean: [
         'json',
         '1',
+    ],
+    string: [
+        'format',
     ],
 };
 
@@ -86,6 +97,10 @@ exports.run = async state => {
         state.options.writeStdout(exports.help);
         state.done = true;
         return state;
+    }
+
+    if (state.opts.json) {
+        state.opts.format = 'json';
     }
 
     const config = Config(state.options);
@@ -166,7 +181,7 @@ exports.run = async state => {
 
     state.options.writeStdout(template(data, {
         columns: !!state.options.stdoutColumns && !state.opts[1],
-        format: state.opts.json ? 'json' : 'default',
+        format: state.opts.format,
         maxWidth: state.options.stdoutColumns,
     }));
 
