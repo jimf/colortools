@@ -113,9 +113,33 @@ describe('show', () => {
         expect(result.stdout).toMatch(/HEX: #bada55[\s\S]+?RGB: rgb\(186, 218, 85\)[\s\S]+?HSL: hsl\(74, 64.3%, 59.4%\)/);
     });
 
-    describe('--json flag', () => {
+    it('should output multiple colors in columns when tty width is available', async () => {
+        const result = await cli(['show', '000000', 'bada55'], opts => {
+            opts.stdoutColumns = 200;
+        });
+        expect(result).toEqual(expect.objectContaining({
+            exitCode: 0,
+            stdout: expect.stringMatching(/#000000[\s\S]+?#bada55[\s\S]+?rgb\(0, 0, 0\)[\s\S]+?rgb\(186, 218, 85\)/),
+            stderr: '',
+        }));
+    });
+
+    describe('-1 flag', () => {
+        it('should force single column output when tty width is available', async () => {
+            const result = await cli(['show', '000000', 'bada55', '-1'], opts => {
+                opts.stdoutColumns = 200;
+            });
+            expect(result).toEqual(expect.objectContaining({
+                exitCode: 0,
+                stdout: expect.stringMatching(/#000000[\s\S]+?rgb\(0, 0, 0\)[\s\S]+?#bada55[\s\S]+?rgb\(186, 218, 85\)/),
+                stderr: '',
+            }));
+        });
+    });
+
+    describe('--format=json flag', () => {
         it('should output single color data as JSON object', async () => {
-            const result = await cli(['show', '000000', '--json']);
+            const result = await cli(['show', '000000', '--format', 'json']);
             expect(result).toEqual(expect.objectContaining({
                 exitCode: 0,
                 stdout: expect.stringContaining('#000000'),
@@ -132,7 +156,7 @@ describe('show', () => {
         });
 
         it('should output multiple color data as JSON array', async () => {
-            const result = await cli(['show', '000000', 'bada55', '--json']);
+            const result = await cli(['show', '000000', 'bada55', '--format', 'json']);
             expect(result).toEqual(expect.objectContaining({
                 exitCode: 0,
                 stdout: expect.stringContaining('#000000'),
@@ -156,6 +180,23 @@ describe('show', () => {
                     mostSimilar: [],
                 },
             ]);
+        });
+
+        it('should accept --json shorthand', async () => {
+            const result = await cli(['show', '000000', '--json']);
+            expect(result).toEqual(expect.objectContaining({
+                exitCode: 0,
+                stdout: expect.stringContaining('#000000'),
+                stderr: '',
+            }));
+            expect(JSON.parse(result.stdout.trim())).toEqual({
+                color: { r: 0, g: 0, b: 0 },
+                hex: '#000000',
+                rgb: 'rgb(0, 0, 0)',
+                hsl: 'hsl(0, 0.0%, 0.0%)',
+                matches: [],
+                mostSimilar: [],
+            });
         });
     });
 
