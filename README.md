@@ -77,7 +77,7 @@ Values will be run through the color parser, so any valid color format may be us
 Namespaces may be used to work with multiple color palettes.
 For example:
 
-    color config set tailwind:colors.blue-500 3B82F6
+    color config set colors.tailwind:blue-500 3B82F6
 
 There is nothing special with regard to this `<namespace>:` syntax.
 It's purely a convention I use.
