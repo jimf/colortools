@@ -41,7 +41,7 @@ function handleHelpFlag(state) {
 Usage: color [--version] [--help] <command> [<args>]
 
 where <command> is one of:
-    help, version
+    config, help, show, version
 
 See 'color help <command>' to read about a specific subcommand.
 `.trim());

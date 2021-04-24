@@ -1,3 +1,10 @@
+/**
+ * Returns whether an object has a given property.
+ *
+ * @param {object} obj Object under test
+ * @param {string} property Property to test for
+ * @return {boolean}
+ */
 exports.hasProperty = (obj, property) =>
     Object.prototype.hasOwnProperty.call(obj, property);
 

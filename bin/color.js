@@ -8,6 +8,7 @@ const options = {
     env: process.env,
     mkdir: fs.promises.mkdir,
     readFile: fs.promises.readFile,
+    stdoutColumns: process.stdout.columns,
     writeFile: fs.promises.writeFile,
     writeStdout: console.log.bind(console),
     writeStderr: console.log.bind(console),

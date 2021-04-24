@@ -4,6 +4,12 @@ exports.cli = (argv, arrange) => {
     let stdout = '';
     let stderr = '';
     const options = {
+        env: {
+            HOME: '/home/username',
+        },
+        mkdir: jest.fn().mockResolvedValue(),
+        readFile: jest.fn().mockResolvedValue(),
+        writeFile: jest.fn().mockResolvedValue(),
         writeStderr: line => {
             stderr += `${line}\n`;
         },
