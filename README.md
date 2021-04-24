@@ -79,7 +79,7 @@ For example:
 
     color config set tailwind:colors.blue-500 3B82F6
 
-There is nothing special with regard to this "<namespace>:" syntax.
+There is nothing special with regard to this `<namespace>:` syntax.
 It's purely a convention I use.
 The keys themselves are _just strings_.
 
