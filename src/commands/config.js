@@ -28,16 +28,14 @@ function validateKey(key, state) {
         return state;
     }
 
-    if (confPath[0] === 'colors') {
-        const isValid = confPath.slice(1).every(part => part.match(/^[A-Za-z0-9-_:$]+$/));
+    const isValid = confPath.slice(1).every(part => part.match(/^[A-Za-z0-9-_:$]+$/));
 
-        if (!isValid) {
-            state.options.writeStderr('Invalid color name specified. Color names should only contain:');
-            state.options.writeStderr(`  A-Z a-z 0-9 _ : $ -`);
-            state.done = true;
-            state.error = true;
-            return state;
-        }
+    if (!isValid) {
+        state.options.writeStderr('Invalid color name specified. Color names should only contain:');
+        state.options.writeStderr(`  A-Z a-z 0-9 _ : $ -`);
+        state.done = true;
+        state.error = true;
+        return state;
     }
 
     return state;
@@ -82,10 +80,12 @@ async function configSet(state) {
         return state;
     }
 
-    // TODO: Right now the config only supports colors.
-    const color = parseColorArg(value.toString());
+    let color;
 
-    if (!color) {
+    // TODO: Right now the config only supports colors.
+    try {
+        color = parseColorArg(value.toString());
+    } catch (e) {
         state.options.writeStderr(`Invalid color value specified: "${value}"`);
         state.done = true;
         state.error = true;

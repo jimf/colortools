@@ -68,9 +68,6 @@ module.exports = options => {
                 }
             }, config);
         },
-        has(confPath) {
-            return this.get(confPath) !== undefined;
-        },
         entries() {
             return Object.entries(flattenConfig(config));
         },
