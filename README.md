@@ -1,3 +1,5 @@
+[![Build Status](https://github.com/jimf/colortools/workflows/CI/badge.svg)](https://github.com/jimf/colortools/actions)
+
 # colortools
 
 Command-line tool for working with colors.
