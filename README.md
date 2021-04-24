@@ -38,7 +38,7 @@ For example, to view the help on the `show` sub-command:
 `show` is likely to be the most used command from this tool.
 Like the name hopefully suggests, it can be used to show information on colors.
 For each color specified, it will output a color swatch, as well as the hex, RGB, and HSL formats of that color.
-Additionally, if any colors have been added to the color configuration (see the config command), the output will show if the color matches or is similar to any config colors.
+Additionally, if any colors have been added to the color configuration (see the [`config`](#config) command), the output will show if the color matches or is similar to any config colors.
 
 Examples:
 
