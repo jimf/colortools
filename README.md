@@ -4,6 +4,8 @@ Command-line tool for working with colors.
 
 _Work in progress_
 
+![screenshot](screenshot.png)
+
 ## Installation
 
 __Prerequisites:__ [NodeJS](https://nodejs.org) `>=12.0.0`
