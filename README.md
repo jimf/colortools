@@ -85,6 +85,17 @@ There is nothing special with regard to this `<namespace>:` syntax.
 It's purely a convention I use.
 The keys themselves are _just strings_.
 
+__colortools__ adheres to the [XDG Base Directory Specification](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html), storing configuration data to `~/.config/@jimf/colortools/config.json`, where the `~/.config` portion can be overridden with the `XDG_CONFIG_HOME` environment variable.
+Data is stored in JSON format, but this is an implementation detail that should not be relied upon.
+Prefer the `color config` command for configuration CRUD.
+
+## Motivation
+
+My primary motivation with this tool was to solve workflow issues I regularly run into while turning design comps into actual code.
+Great comps strictly adhere to a color palette, and provide color variables directly.
+However, if I'm just working off of a screen grab, or raw hex codes, etc., it can be time consuming to translate color variables into their palette equivalents, particularly if the colors are close but not perfect.
+With this tool, I can take these raw color values and very quickly translate them to the palettes I work with.
+
 ## License
 
 [MIT](LICENSE)
