@@ -1,4 +1,3 @@
-const chalk = require('chalk');
 const { cli } = require('../spec_utils');
 
 describe('show', () => {
