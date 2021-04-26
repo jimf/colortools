@@ -15,6 +15,10 @@
   "bin": {
     "color": "./bin/color.js"
   },
+  "files": [
+    "bin/",
+    "src/"
+  ],
   "keywords": [
     "color",
     "palette",
