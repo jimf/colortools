@@ -245,7 +245,7 @@ describe('show', () => {
                 const result = await cli(['show', '000000', '--format', 'long', '--no-headers', '--columns', 'color']);
                 expect(result).toEqual(expect.objectContaining({
                     exitCode: 0,
-                    stdout: `${chalk.bgHex('#000000')('     ')}\n`,
+                    stdout: expect.stringContaining('     '),
                     stderr: '',
                 }));
             });
