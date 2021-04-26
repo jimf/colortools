@@ -10,7 +10,7 @@ const { parseColorArg } = require('./util');
 exports.help = `
 Usage: color show <color> [<options>]
 
-Show information one or more colors.
+Show information on one or more colors.
 
 Available options:
   --help, -h             This help
