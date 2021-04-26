@@ -1,3 +1,4 @@
+const chalk = require('chalk');
 const { cli } = require('../spec_utils');
 
 describe('show', () => {
@@ -113,6 +114,15 @@ describe('show', () => {
         expect(result.stdout).toMatch(/HEX: #bada55[\s\S]+?RGB: rgb\(186, 218, 85\)[\s\S]+?HSL: hsl\(74, 64.3%, 59.4%\)/);
     });
 
+    it('should deduplicate colors', async () => {
+        const result = await cli(['show', '000000', '000000']);
+        expect(result).toEqual(expect.objectContaining({
+            exitCode: 0,
+            stderr: '',
+        }));
+        expect(result.stdout.match(/#000000/g).length).toBe(1);
+    });
+
     it('should output multiple colors in columns when tty width is available', async () => {
         const result = await cli(['show', '000000', 'bada55'], opts => {
             opts.stdoutColumns = 200;
@@ -197,6 +207,122 @@ describe('show', () => {
                 matches: [],
                 mostSimilar: [],
             });
+        });
+    });
+
+    describe('--format=long', () => {
+        it('should output color info in columns', async () => {
+            const result = await cli(['show', '000000', '--format', 'long']);
+            expect(result).toEqual(expect.objectContaining({
+                exitCode: 0,
+                stdout: expect.stringMatching(/^Color\s+HEX\s+RGB\s+HSL\s+Matches\s+Similar\n.+?#000000\s+rgb\(0, 0, 0\)\s+hsl\(0, 0\.0%, 0\.0%\)\s+NO MATCHES\s+NO SIMILAR\n$/),
+                stderr: '',
+            }));
+        });
+
+        it('should omit headers when --no-headers specified', async () => {
+            const result = await cli(['show', '000000', '--format', 'long', '--no-headers']);
+            expect(result).toEqual(expect.objectContaining({
+                exitCode: 0,
+                stdout: expect.stringMatching(/^.+?#000000\s+rgb\(0, 0, 0\)\s+hsl\(0, 0\.0%, 0\.0%\)\s+NO MATCHES\s+NO SIMILAR\n$/),
+                stderr: '',
+            }));
+        });
+
+        ['--long', '-l'].forEach(flag => {
+            it(`should support ${flag} shorthand`, async () => {
+                const result = await cli(['show', '000000', flag]);
+                expect(result).toEqual(expect.objectContaining({
+                    exitCode: 0,
+                    stdout: expect.stringMatching(/^Color\s+HEX\s+RGB\s+HSL\s+Matches\s+Similar\n.+?#000000\s+rgb\(0, 0, 0\)\s+hsl\(0, 0\.0%, 0\.0%\)\s+NO MATCHES\s+NO SIMILAR\n$/),
+                    stderr: '',
+                }));
+            });
+        });
+
+        describe('--columns', () => {
+            it('should support filtering "color" column', async () => {
+                const result = await cli(['show', '000000', '--format', 'long', '--no-headers', '--columns', 'color']);
+                expect(result).toEqual(expect.objectContaining({
+                    exitCode: 0,
+                    stdout: `${chalk.bgHex('#000000')('     ')}\n`,
+                    stderr: '',
+                }));
+            });
+
+            it('should support filtering "hex" column', async () => {
+                const result = await cli(['show', '000000', '--format', 'long', '--no-headers', '--columns', 'hex']);
+                expect(result).toEqual(expect.objectContaining({
+                    exitCode: 0,
+                    stdout: '#000000\n',
+                    stderr: '',
+                }));
+            });
+
+            it('should support filtering "rgb" column', async () => {
+                const result = await cli(['show', '000000', '--format', 'long', '--no-headers', '--columns', 'rgb']);
+                expect(result).toEqual(expect.objectContaining({
+                    exitCode: 0,
+                    stdout: 'rgb(0, 0, 0)\n',
+                    stderr: '',
+                }));
+            });
+
+            it('should support filtering "hsl" column', async () => {
+                const result = await cli(['show', '000000', '--format', 'long', '--no-headers', '--columns', 'hsl']);
+                expect(result).toEqual(expect.objectContaining({
+                    exitCode: 0,
+                    stdout: 'hsl(0, 0.0%, 0.0%)\n',
+                    stderr: '',
+                }));
+            });
+
+            it('should support filtering "matches" column', async () => {
+                const result = await cli(['show', '000000', '--format', 'long', '--no-headers', '--columns', 'matches']);
+                expect(result).toEqual(expect.objectContaining({
+                    exitCode: 0,
+                    stdout: 'NO MATCHES\n',
+                    stderr: '',
+                }));
+            });
+
+            it('should support filtering "similar" column', async () => {
+                const result = await cli(['show', '000000', '--format', 'long', '--no-headers', '--columns', 'similar']);
+                expect(result).toEqual(expect.objectContaining({
+                    exitCode: 0,
+                    stdout: 'NO SIMILAR\n',
+                    stderr: '',
+                }));
+            });
+
+            it('should support filtering multiple columns', async () => {
+                const result = await cli(['show', '000000', '--format', 'long', '--no-headers', '--columns', 'hex,rgb']);
+                expect(result).toEqual(expect.objectContaining({
+                    exitCode: 0,
+                    stdout: '#000000  rgb(0, 0, 0)\n',
+                    stderr: '',
+                }));
+            });
+
+            it('should write an error message to STDERR and exit 1 if an invalid column name is provided', async () => {
+                const result = await cli(['show', '000000', '--format', 'long', '--no-headers', '--columns', 'invalid']);
+                expect(result).toEqual(expect.objectContaining({
+                    exitCode: 1,
+                    stdout: '',
+                    stderr: expect.stringContaining('Invalid column specified'),
+                }));
+            });
+        });
+    });
+
+    describe('--sort flag', () => {
+        it('should sort colors by HSL', async () => {
+            const result = await cli(['show', '#3B82F6', '#EF4444', '--sort']);
+            expect(result).toEqual(expect.objectContaining({
+                exitCode: 0,
+                stdout: expect.stringMatching(/#ef4444[\s\S]+?#3b82f6/),
+                stderr: '',
+            }));
         });
     });
 
