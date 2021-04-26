@@ -240,9 +240,15 @@ exports.run = async state => {
         return acc;
     }, {});
 
+    const seen = {};
     const data = [];
 
     colors.forEach(color => {
+        // Dedup
+        if (seen[color.format('rgb')]) {
+            return;
+        }
+
         const { matches, mostSimilar } = Object.keys(configColors).reduce((acc, name) => {
             const distance = color.distance(configColors[name]);
 
@@ -270,6 +276,7 @@ exports.run = async state => {
             matches,
             mostSimilar,
         });
+        seen[color.format('rgb')] = true;
     });
 
     if (state.opts.sort) {
