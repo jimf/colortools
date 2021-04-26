@@ -30,6 +30,18 @@ class Color {
     }
 
     /**
+     * Compare function, for sorting. Orders by HSL.
+     *
+     * @param {Color} other Color to compare with
+     * @return {number}
+     */
+    compare(other) {
+        const [h1, s1, l1] = rgb2hsl([this.r, this.g, this.b]);
+        const [h2, s2, l2] = rgb2hsl([other.r, other.g, other.b]);
+        return (h1 - h2) || (s1 - s2) || (l1 - l2);
+    }
+
+    /**
      * Calculate the distance between this and another color. Result is a number
      * between 0 and 1.
      *

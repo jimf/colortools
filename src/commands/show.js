@@ -16,6 +16,7 @@ Available options:
   --help, -h             This help
   --format=<format>      Specify a different output format. Available formats:
                          json, long
+  --sort                 Sort results (by HSL)
   --json                 Shorthand for '--format=json'
   --long, -l             Shorthand for '--format=long'
   -1                     (The numeric digit one) Force single-column output.
@@ -31,6 +32,7 @@ exports.parseOptions = {
     boolean: [
         'headers',
         'json',
+        'sort',
         'truncate',
         '1',
     ],
@@ -269,6 +271,10 @@ exports.run = async state => {
             mostSimilar,
         });
     });
+
+    if (state.opts.sort) {
+        data.sort((a, b) => a.color.compare(b.color));
+    }
 
     state.options.writeStdout(template(data, {
         columns: !!state.options.stdoutColumns && !state.opts[1],
