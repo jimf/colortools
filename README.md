@@ -1,3 +1,4 @@
+[![npm Version](https://img.shields.io/npm/v/@jimf/colortools.svg)](https://www.npmjs.com/package/@jimf/colortools)
 [![Build Status](https://github.com/jimf/colortools/workflows/CI/badge.svg)](https://github.com/jimf/colortools/actions)
 
 # colortools
