@@ -16,8 +16,8 @@
     "color": "./bin/color.js"
   },
   "files": [
-    "bin/",
-    "src/"
+    "bin/**/*.js",
+    "src/**/*.js"
   ],
   "keywords": [
     "color",

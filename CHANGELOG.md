@@ -1,6 +1,8 @@
 # Changelog
 
 ## [Unreleased]
+### Fixed
+- Removed extraneous files from npm package
 
 ## [0.2.0] - 2021-04-26
 ### Changed
