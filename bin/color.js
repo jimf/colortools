@@ -6,6 +6,7 @@ const fs = require('fs');
 
 const options = {
     env: process.env,
+    isTTY: process.stdout.isTTY,
     mkdir: fs.promises.mkdir,
     readFile: fs.promises.readFile,
     stdoutColumns: process.stdout.columns,

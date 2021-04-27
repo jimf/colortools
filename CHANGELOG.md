@@ -1,6 +1,8 @@
 # Changelog
 
 ## [Unreleased]
+### Changed
+- `show`: Default to `long` format, no headers, no `color` column when stdout is not a tty
 
 ## [0.1.1] - 2021-04-26
 ### Removed

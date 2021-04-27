@@ -166,6 +166,8 @@ function template(data, options) {
 }
 
 exports.run = async state => {
+    const columns = ['color', 'hex', 'rgb', 'hsl', 'matches', 'similar'];
+
     if (state.opts._.length === 0) {
         state.options.writeStdout(exports.help);
         state.done = true;
@@ -174,12 +176,11 @@ exports.run = async state => {
 
     if (state.opts.columns) {
         const showColumns = state.opts.columns.split(',');
-        const valid = ['color', 'hex', 'rgb', 'hsl', 'matches', 'similar'];
-        const invalid = showColumns.filter(col => !valid.includes(col));
+        const invalid = showColumns.filter(col => !columns.includes(col));
 
         if (invalid.length > 0) {
             state.options.writeStderr(`Invalid column${invalid.length === 1 ? '' : 's'} specified with '--columns': ${invalid.join(', ')}`);
-            state.options.writeStderr(`Use: ${valid.join(', ')}`);
+            state.options.writeStderr(`Use: ${columns.join(', ')}`);
             state.error = true;
             state.done = true;
             return state;
@@ -194,6 +195,15 @@ exports.run = async state => {
 
     if (state.opts.long) {
         state.opts.format = 'long';
+    }
+
+    if (!state.options.isTTY) {
+        if (state.opts.format === undefined) {
+            state.opts.format = 'long';
+        }
+
+        state.opts.columns = (state.opts.columns || columns).filter(c => c !== 'color');
+        state.opts.headers = false;
     }
 
     const config = Config(state.options);

@@ -7,6 +7,7 @@ exports.cli = (argv, arrange) => {
         env: {
             HOME: '/home/username',
         },
+        isTTY: true,
         mkdir: jest.fn().mockResolvedValue(),
         readFile: jest.fn().mockResolvedValue(),
         writeFile: jest.fn().mockResolvedValue(),

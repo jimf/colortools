@@ -331,6 +331,42 @@ describe('show', () => {
         });
     });
 
+    describe('when run environment is not a TTY', () => {
+        it('should default to "long" format with no headers and no "color" column', async () => {
+            const result = await cli(['show', '000000'], opts => {
+                opts.isTTY = undefined;
+            });
+            expect(result).toEqual(expect.objectContaining({
+                exitCode: 0,
+                stdout: '#000000  rgb(0, 0, 0)  hsl(0, 0.0%, 0.0%)  NO MATCHES  NO SIMILAR\n',
+                stderr: '',
+            }));
+        });
+
+        it('should allow format to be specified', async () => {
+            const result = await cli(['show', '000000', '--json'], opts => {
+                opts.isTTY = undefined;
+            });
+            expect(result).toEqual(expect.objectContaining({
+                exitCode: 0,
+                stderr: '',
+            }));
+            const json = JSON.parse(result.stdout);
+            expect(json.hex).toBe('#000000');
+        });
+
+        it('should allow columns to be specified', async () => {
+            const result = await cli(['show', '000000', '--columns', 'hex'], opts => {
+                opts.isTTY = undefined;
+            });
+            expect(result).toEqual(expect.objectContaining({
+                exitCode: 0,
+                stdout: '#000000\n',
+                stderr: '',
+            }));
+        });
+    });
+
     it('should show usage info and exit 0 if called without args', async () => {
         expect(await cli(['show'])).toEqual(expect.objectContaining({
             exitCode: 0,
