@@ -219,11 +219,65 @@ describe('show', () => {
             }));
         });
 
+        it('should show matching colors as comma-separated list', async () => {
+            const result = await cli(['show', '#3B82F6', '--format', 'long'], opts => {
+                opts.readFile.mockResolvedValue(JSON.stringify({
+                    colors: {
+                        'blue-500': '#3B82F6',
+                        'primary': '#3B82F6',
+                    },
+                }));
+            });
+            expect(result).toEqual(expect.objectContaining({
+                exitCode: 0,
+                stdout: expect.stringContaining('  blue-500,primary  '),
+                stderr: '',
+            }));
+        });
+
+        it('should show similar colors as comma-separated list', async () => {
+            const result = await cli(['show', '#3478F2', '--format', 'long'], opts => {
+                opts.readFile.mockResolvedValue(JSON.stringify({
+                    colors: {
+                        'blue-500': '#3B82F6',
+                        'blue-600': '#2C6DEF',
+                    },
+                }));
+            });
+            expect(result).toEqual(expect.objectContaining({
+                exitCode: 0,
+                stdout: expect.stringContaining('  96.93%|blue-500,96.67%|blue-600\n'),
+                stderr: '',
+            }));
+        });
+
         it('should omit headers when --no-headers specified', async () => {
             const result = await cli(['show', '000000', '--format', 'long', '--no-headers']);
             expect(result).toEqual(expect.objectContaining({
                 exitCode: 0,
                 stdout: expect.stringMatching(/^.+?#000000\s+rgb\(0, 0, 0\)\s+hsl\(0, 0\.0%, 0\.0%\)\s+NO MATCHES\s+NO SIMILAR\n$/),
+                stderr: '',
+            }));
+        });
+
+        it('should truncate lines that extend beyond stdout width', async () => {
+            const result = await cli(['show', '000000', '--format', 'long', '--no-headers'], opts => {
+                opts.stdoutColumns = 20;
+            });
+            expect(result).toEqual(expect.objectContaining({
+                exitCode: 0,
+                stdout: expect.stringMatching(/…\n$/),
+                stderr: '',
+            }));
+        });
+
+        it('should NOT truncate lines that extend beyond stdout width when --no-truncate specified', async () => {
+            const result = await cli(['show', '000000', '--format', 'long', '--no-headers', '--no-truncate'], opts => {
+                opts.stdoutColumns = 20;
+            });
+            expect(result).toEqual(expect.objectContaining({
+                exitCode: 0,
+                stdout: expect.stringMatching(/NO SIMILAR\n$/),
                 stderr: '',
             }));
         });
@@ -315,6 +369,13 @@ describe('show', () => {
                     exitCode: 1,
                     stdout: '',
                     stderr: expect.stringContaining('Invalid column specified'),
+                }));
+
+                const result2 = await cli(['show', '000000', '--format', 'long', '--no-headers', '--columns', 'invalid1,invalid2']);
+                expect(result2).toEqual(expect.objectContaining({
+                    exitCode: 1,
+                    stdout: '',
+                    stderr: expect.stringContaining('Invalid columns specified'),
                 }));
             });
         });

@@ -28,6 +28,14 @@ describe('help', () => {
         }));
     });
 
+    it('should write error message to STDERR and exit 1 when an invalid sub-command is provided', async () => {
+        expect(await cli(['help', 'invalid-subcommand'])).toEqual(expect.objectContaining({
+            exitCode: 1,
+            stdout: '',
+            stderr: "No help available for 'invalid-subcommand'\n",
+        }));
+    });
+
     Object.keys(commands).forEach(cmd => {
         describe(cmd, () => {
             it(`"help ${cmd}" should write ${cmd} usage info to STDOUT and exit 0`, async () => {
